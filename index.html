@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jeu Saint-Valentin ❤️</title>
+<style>
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #ffe6f0, #ffb6d2);
+  color: #333;
+  margin:0; padding:0; text-align:center; overflow-x:hidden;
+}
+.page { display:none; opacity:0; padding:20px; min-height:100vh; transition: opacity 0.8s ease-in-out; }
+.active { display:block; opacity:1; }
+h1, h2 { color:#ff007f; font-family:'Brush Script MT', cursive; }
+h1 { font-size:2.8em; margin-top:20px; }
+h2 { font-size:2.2em; margin-bottom:20px; }
+input { padding:12px; font-size:1.1em; border-radius:8px; border:2px solid #ff69b4; margin:10px 0; width:80%; max-width:300px; text-align:center; }
+button { padding:12px 25px; margin:10px; font-size:1.3em; border:none; border-radius:15px; cursor:pointer; background: #ff69b4; color:white; box-shadow:0 4px 12px rgba(255,105,180,0.5); transition:0.3s; }
+button:hover { transform: scale(1.1); box-shadow:0 6px 18px rgba(255,105,180,0.8); }
+.heart { font-size:5em; color:pink; cursor:pointer; display:inline-block; position:absolute; transition: transform 0.3s, top 0.5s, left 0.5s; }
+.parchment { background:#fdf5e6; border:2px solid #deb887; border-radius:25px; padding:25px; box-shadow:0 0 25px rgba(0,0,0,0.3); max-width:550px; margin:40px auto; font-family:'Georgia', serif; font-size:1.2em; text-align:left; }
+#finalMsg,#loveCalcMsg,#loveMsg,#heartMsg2,#dateMsg,#numMsg,#carMsg,#mexMsg,#msg12 { font-weight:bold; margin-top:15px; font-size:1.1em; }
+.confetti { position:absolute; width:12px; height:12px; background: #ff69b4; border-radius:50%; animation:fall linear infinite; }
+@keyframes fall { 0%{top:0;} 100%{top:100vh;} }
+</style>
+</head>
+<body>
+
+<!-- PAGE D'INTRODUCTION -->
+<div class="page active" id="page0">
+  <h1>Bonjour Aodrenn ! 💖</h1>
+  <div class="parchment">
+    <p>Bienvenue dans ce jeu spécial Saint-Valentin !</p>
+    <p><strong>Important :</strong></p>
+    <ul>
+      <li>Il n’y a <strong>pas de retour en arrière</strong>, fais attention à tes réponses.</li>
+      <li>Pour chaque énigme : au <strong>3ᵉ échec</strong>, un indice apparaîtra ; au <strong>5ᵉ échec</strong>, un second indice sera donné.</li>
+      <li>Si tu bloques vraiment, tu as <strong>le droit à un seul appel</strong> pour obtenir de l’aide : <strong>06 31 51 47 75</strong></li>
+      <li>Note bien les indices quand ils apparaissent, car si tu réessaies et que tu te trompes, ils disparaissent.</li>
+      <li>Le jeu n'est jamais "cassé", si tu n'y arrives pas il faut persévérer 😉</li>
+    </ul>
+    <button onclick="nextPage('page1')">Commencer ❤️</button>
+  </div>
+</div>
+
+<!-- PAGE 1 -->
+<div class="page" id="page1">
+  <div class="parchment">
+    <h2>Date importante 📅</h2>
+    <input type="text" id="dateInput" placeholder="JJ/MM/AAAA">
+    <br><button onclick="checkDate()">Valider</button>
+    <p id="dateMsg"></p>
+    <p>Temps restant : <span id="timer1">10</span> secondes</p>
+    <p id="indice1" style="color:#ff007f;font-weight:bold;"></p>
+  </div>
+</div>
+
+<!-- PAGE 2 -->
+<div class="page" id="page2">
+  <h2>Attrape le cœur 💖</h2>
+  <p>Temps restant : <span id="timer2">20</span> secondes</p>
+  <div id="heartsContainer2" style="position:relative;height:60vh;"></div>
+  <p id="heartMsg2"></p>
+</div>
+
+<!-- PAGE 3 -->
+<div class="page" id="page3">
+  <h2>Quel est le plus grand nombre du monde ? 🤔</h2>
+  <input type="text" id="numInput">
+  <br><button onclick="checkNum()">Valider</button>
+  <p id="numMsg"></p>
+</div>
+
+<!-- PAGE 4 -->
+<div class="page" id="page4">
+  <h2>Quelle est ma voiture préférée ? 🚗</h2>
+  <input type="text" id="carInput">
+  <br><button onclick="checkCar()">Valider</button>
+  <p id="carMsg"></p>
+</div>
+
+<!-- PAGE 5 -->
+<div class="page" id="page5">
+  <h2>Énigme 🏺</h2>
+  <div class="parchment">
+    <p>
+  Je suis un pays dont le nom contient 7 lettres 🌎.<br>
+  On me connaît pour mon soleil, ma culture riche et mes paysages variés.<br>
+  Quel pays suis-je ?
+</p>
+    <input type="text" id="mexInput" placeholder="Ta réponse">
+    <br><button onclick="checkMex()">Valider</button>
+    <p id="mexMsg"></p>
+  </div>
+</div>
+
+<!-- PAGE 6 -->
+<div class="page" id="page6">
+  <h2>Énigme émotionnelle ❤️</h2>
+  <div class="parchment">
+    <p>Devine le mot qui décrit mes sentiments… (indice: 💌)</p>
+    <input type="text" id="loveInput">
+    <br><button onclick="checkLove()">Valider</button>
+    <p id="loveMsg"></p>
+  </div>
+</div>
+
+<!-- PAGE 7 -->
+<div class="page" id="page7">
+  <h2>Attrape le cœur avec le numéro 12 💖</h2>
+  <div id="heartsContainer" style="position:relative;height:60vh;"></div>
+  <p id="msg12"></p>
+</div>
+
+<!-- PAGE 8 -->
+<div class="page" id="page8">
+  <h2>Déchiffre le mot ❤️</h2>
+  <p>
+Chaque lettre a une valeur (A=1… Z=26).<br><br>
+Additionne toutes les lettres du mot.<br>
+Soustrais 12.<br>
+Le total obtenu donne : 42<br><br>
+Quel est ce mot ?
+  </p>
+  <input type="text" id="loveCalc">
+  <br><button onclick="checkLoveCalc()">Valider</button>
+  <p id="loveCalcMsg"></p>
+</div>
+
+<!-- PAGE 9 -->
+<div class="page" id="page9">
+  <h2>Tu as presque fini…</h2>
+  <p>Tu as traversé toutes les étapes…</p>
+  <p>Il ne reste plus qu’une seule question…</p>
+  <button onclick="nextPage('page10')">Continuer ❤️</button>
+</div>
+
+<!-- PAGE 10 -->
+<div class="page" id="page10">
+  <h2>Veux-tu être ma Valentine ? 💖</h2>
+  <button id="yesBtn" onclick="yesFinal()">Oui</button>
+  <button id="noBtn" class="flee">Non</button>
+  <p id="finalMsg"></p>
+</div>
+
+<script>
+// ==== NAVIGATION ====
+function nextPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if(id === 'page2'){ startPage2(); }
+}
+
+// Page 1
+let timer1 = 20;          // durée 20s
+let timer1Interval = null;
+
+function startPage1() {
+  timer1 = 20;
+  document.getElementById('timer1').innerText = timer1;
+  document.getElementById('indice1').innerText = '';
+  
+  clearInterval(timer1Interval);
+  timer1Interval = setInterval(() => {
+    timer1--;
+    document.getElementById('timer1').innerText = timer1;
+    if(timer1 === 0) {
+      document.getElementById('indice1').innerText = "Indice : Gonfaron";
+      clearInterval(timer1Interval);
+    }
+  }, 1000);
+}
+
+// Modifier la fonction nextPage pour lancer le timer quand on arrive sur page1
+function nextPage(id){
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if(id === 'page1'){ startPage1(); }   // <-- démarre timer ici
+  if(id === 'page2'){ startPage2(); }
+}
+
+function checkDate(){
+  const val=document.getElementById('dateInput').value;
+  if(val==='16/08/2025'){
+    document.getElementById('dateMsg').innerText="Erreur 😅… Je rigole !";
+    const btn=document.createElement('button');
+    btn.innerText="Continuer";
+    btn.onclick=()=>nextPage('page2');
+    document.getElementById('dateMsg').appendChild(document.createElement('br'));
+    document.getElementById('dateMsg').appendChild(btn);
+  } else document.getElementById('dateMsg').innerText="Oups, réessaye 😅";
+}
+
+// ===== PAGE 2 ULTRA RAPIDE =====
+let heartSpeed = 5;        // vitesse initiale très rapide
+let timer2 = 60;
+let timer2Interval = null;
+let heartMoveId = null;
+let retryCount = 0;        // nombre de tentatives
+let thirdAttempt = false;
+
+function startPage2() {
+  heartSpeed = 5;           // réinitialise vitesse à base ultra rapide
+  timer2 = 60;
+  thirdAttempt = (retryCount >= 2);
+  document.getElementById('timer2').innerText = timer2;
+  document.getElementById('heartMsg2').innerHTML = '';
+  document.getElementById('heartsContainer2').innerHTML = '';
+
+  spawnHeart2();
+
+  timer2Interval = setInterval(() => {
+    timer2--;
+    document.getElementById('timer2').innerText = timer2;
+    if (timer2 <= 0) {
+      clearInterval(timer2Interval);
+      cancelAnimationFrame(heartMoveId);
+      document.getElementById('heartsContainer2').innerHTML = '';
+
+      const btn = document.createElement('button');
+      btn.innerText = "Réessayer 😅";
+      btn.onclick = () => {
+        retryCount++;
+        startPage2();
+      };
+      document.getElementById('heartMsg2').appendChild(btn);
+    }
+  }, 1000);
+}
+
+function spawnHeart2() {
+  const container = document.getElementById('heartsContainer2');
+  container.innerHTML = '';
+
+  const heart = document.createElement('div');
+  heart.className = 'heart';
+  heart.innerText = '💖';
+  container.appendChild(heart);
+
+  // Dimensions container
+  const containerHeight = container.clientHeight;
+  const containerWidth = container.clientWidth;
+
+  // Dimensions cœur
+  const heartHeight = heart.offsetHeight;
+  const heartWidth = heart.offsetWidth;
+
+  let top = Math.random() * (containerHeight - heartHeight);
+  let left = Math.random() * (containerWidth - heartWidth);
+
+  heart.style.top = top + 'px';
+  heart.style.left = left + 'px';
+
+  let dirX = Math.random() < 0.5 ? 1 : -1;
+  let dirY = Math.random() < 0.5 ? 1 : -1;
+
+  function moveHeart() {
+    // Mouvement très rapide et variable
+    top += dirY * (1 + Math.random()) * heartSpeed;
+    left += dirX * (1 + Math.random()) * heartSpeed;
+
+    // Limiter le cœur à l'intérieur du container
+    if (top < 0) { top = 0; dirY *= -1; }
+    if (top > containerHeight - heartHeight) { top = containerHeight - heartHeight; dirY *= -1; }
+    if (left < 0) { left = 0; dirX *= -1; }
+    if (left > containerWidth - heartWidth) { left = containerWidth - heartWidth; dirX *= -1; }
+
+    heart.style.top = top + 'px';
+    heart.style.left = left + 'px';
+    heartMoveId = requestAnimationFrame(moveHeart);
+  }
+
+  moveHeart();
+
+  heart.onclick = () => {
+    if (thirdAttempt) {
+      clearInterval(timer2Interval);
+      cancelAnimationFrame(heartMoveId);
+      nextPage('page3');
+    } else {
+      cancelAnimationFrame(heartMoveId);
+      heartSpeed += 2; // accélération très forte à chaque clic raté
+      spawnHeart2();
+    }
+  };
+}
+
+// Page 3
+function checkNum(){
+  const val=document.getElementById('numInput').value;
+  if(val==='12'){ document.getElementById('numMsg').innerText="Bien joué !"; setTimeout(()=>nextPage('page4'),1000); }
+  else document.getElementById('numMsg').innerText="Essaie encore 😉";
+}
+
+// Page 4
+function checkCar(){
+  const val=document.getElementById('carInput').value.toUpperCase();
+  if(val.includes('SVJ')){ document.getElementById('carMsg').innerText="Exact !"; setTimeout(()=>nextPage('page5'),1000); }
+  else document.getElementById('carMsg').innerText="Non 😅";
+}
+
+// Page 5
+let mexErrors=0;
+function checkMex(){
+  const val=document.getElementById('mexInput').value.toLowerCase();
+  if(val.includes('mex')){ document.getElementById('mexMsg').innerHTML="Bravo ! 🇲🇽 <button onclick=\"nextPage('page6')\">Continuer</button>"; mexErrors=0; }
+  else {
+    mexErrors++;
+    let msg="Essaie encore 😅";
+    if(mexErrors===3) msg="T'as vraiment cru que je te donnerais un indice ?";
+    else if(mexErrors===5) msg="Bon vasy je suis gentil vu que tu galères, on y parle une langue que t'adores";
+    document.getElementById('mexMsg').innerText=msg;
+  }
+}
+
+// Page 6
+let loveErrors=0;
+function checkLove(){
+  const val=document.getElementById('loveInput').value.toLowerCase();
+  if(val==='amour'){ document.getElementById('loveMsg').innerText="Exact ! ❤️"; loveErrors=0; setTimeout(()=>nextPage('page7'),1000);}
+  else {
+    loveErrors++;
+    let msg="Essaie encore 😅";
+    if(loveErrors===3) msg="Booooh t'abuses la quand même";
+    else if(loveErrors===5) msg="Ce que je ressens pour toi (je sais ça t'avances pas mdr)";
+    document.getElementById('loveMsg').innerText=msg;
+  }
+}
+
+// Page 7
+const heartNumbers=[11,12,13,14,15,16,17,18,19,20];
+function generateHearts7(){
+  const container=document.getElementById('heartsContainer');
+  container.innerHTML='';
+  const positions=[];
+  heartNumbers.forEach(num=>{
+    const h=document.createElement('div');
+    h.className='heart';
+    h.innerText='💖';
+    h.dataset.number=num;
+    let top,left,safe=false,attempts=0;
+    while(!safe&&attempts<100){
+      top=Math.random()*50;
+      left=Math.random()*80;
+      safe=true;
+      for(let pos of positions){
+        const dist=Math.sqrt(Math.pow(pos.top-top,2)+Math.pow(pos.left-left,2));
+        if(dist<10){ safe=false; break; }
+      }
+      attempts++;
+    }
+    positions.push({top,left});
+    h.style.top=top+'vh';
+    h.style.left=left+'vw';
+    h.onclick=()=>{ if(num===12){ nextPage('page8'); } else { document.getElementById('msg12').innerText="Essaie encore 😅"; h.style.transform="scale(0.8)"; setTimeout(()=>h.style.transform="scale(1)",200); } };
+    container.appendChild(h);
+  });
+}
+generateHearts7();
+
+// Page 8
+let loveCalcErrors=0;
+function checkLoveCalc(){
+  const val=document.getElementById('loveCalc').value.toLowerCase();
+  if(val==='love'){ document.getElementById('loveCalcMsg').innerText="Exact ! 💖"; loveCalcErrors=0; setTimeout(()=>nextPage('page9'),1000);}
+  else{
+    loveCalcErrors++;
+    let msg="Essaie encore 😅";
+    if(loveCalcErrors===3) msg="Il y a un lien avec un mot deja trouvé";
+    else if(loveCalcErrors===5) msg="Anglais";
+    document.getElementById('loveCalcMsg').innerText=msg;
+  }
+}
+
+// Page 10
+function yesFinal(){ document.getElementById('finalMsg').innerText="Bravo ! 💖 Tu es officiellement ma Valentine ! ❤️🎉"; createConfetti(); }
+const noBtn=document.getElementById('noBtn');
+noBtn.addEventListener('mouseover',moveNo);
+noBtn.addEventListener('click',moveNo);
+function moveNo(){
+  const maxX=window.innerWidth-noBtn.offsetWidth;
+  const maxY=window.innerHeight-noBtn.offsetHeight;
+  const x=Math.random()*maxX;
+  const y=Math.random()*maxY;
+  noBtn.style.position='absolute';
+  noBtn.style.left=x+'px';
+  noBtn.style.top=y+'px';
+  noBtn.style.zIndex=9999;
+  setTimeout(()=>{if(isHover(noBtn)) moveNo();},100);
+}
+function isHover(el){ const r=el.getBoundingClientRect(); return event.clientX>=r.left && event.clientX<=r.right && event.clientY>=r.top && event.clientY<=r.bottom; }
+
+function createConfetti(){ for(let i=0;i<30;i++){ const c=document.createElement('div'); c.className='confetti'; c.style.left=Math.random()*100+'vw'; c.style.background=['#ff69b4','#ff1493','#ffb6c1'][Math.floor(Math.random()*3)]; c.style.animationDuration=(2+Math.random()*2)+'s'; document.body.appendChild(c); setTimeout(()=>c.remove(),4000); } }
+</script>
+</body>
+</html>
